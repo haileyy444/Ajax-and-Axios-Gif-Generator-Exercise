@@ -20,10 +20,9 @@ function addImages(res)
     $memeImage.attr("src", $randomImageUrl);
 
     $imageList.append($memeImage);
-    // $imageList.setAttribute("width", $memeImage.width);    
+
     $imageList.attr("width", $memeImage.width());
-    
-    // $imageGenArea.appendChild($imageList);
+ 
     $imageGenArea.append($imageList);
 };
 $searchButton.on("click" , async function getImage(e){
