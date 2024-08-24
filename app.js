@@ -10,36 +10,41 @@ const $clearButton = $("#removeImagesButton");
 
 function addImages(res)
 {
+    console.log("recieved res" + res);
     
+    let $imageList = $("<div>");
     
-    const $imageList = $("<div>");
+    let $memeImage = $("<img>");
+        
+    let $randomImageUrl = res.data[(Math.floor(Math.random()) * (res.data.length))].images.original.url;
+    $memeImage.attr("src", $randomImageUrl);
 
+    $imageList.append($memeImage);
+    // $imageList.setAttribute("width", $memeImage.width);    
+    $imageList.attr("width", $memeImage.width());
     
-    const $memeImage = $("<img>");
-    
-    
-    $memeImage.src= res.data[Math.floor(Math.random() * (res.data.length))].images.original.url;
-    $imageList.appendChild($memeImage);
-    $imageList.setAttribute("width", $memeImage.width);    
-
-    
-    $imageGenArea.appendChild($imageList);
+    // $imageGenArea.appendChild($imageList);
+    $imageGenArea.append($imageList);
 };
 $searchButton.on("click" , async function getImage(e){
     e.preventDefault();
     let search = $userInput.val();
     $userInput.val("");
+    console.log("search clicked");
 
-    const response = await axios.get(' http://api.giphy.com/v1/gifs/search', {params: {q: search, api_key: "MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym"}});
-    addImage(response.data);
-});
-
-$("#clearButton").on("click", function(event)
-{
-    if(event.target.tagName == "BUTTON")
-    {
-        $imageGenArea.empty();
+    try {
+        const response = await axios.get('http://api.giphy.com/v1/gifs/search', {
+            params: { q: search, api_key: "MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym" }
+        });
+        addImages(response.data);
+        console.log("axios response" + response);
+    } catch (err) {
+        console.error("Error fetching images:", err);
     }
     
-}
-);
+});
+
+$clearButton.on("click", function () {
+    $imageGenArea.empty();
+    console.log("clear button clicked");
+});
